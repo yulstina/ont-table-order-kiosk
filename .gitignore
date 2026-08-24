@@ -1,0 +1,11 @@
+# macOS resource forks / junk
+._*
+.DS_Store
+Thumbs.db
+
+# editor
+.vscode/
+.idea/
+
+# node
+node_modules/

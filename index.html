@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#171412">
+<meta name="description" content="ONT Table Order Kiosk — a fully interactive 1920×1080 restaurant table-ordering kiosk demo.">
+<title>ONT Table Order Kiosk</title>
+<link rel="icon" href="assets/images/bell.svg">
+<link rel="stylesheet" href="assets/css/kiosk.css">
+<link rel="stylesheet" href="assets/css/views.css">
+</head>
+<body>
+
+<a class="skip-link" href="#menu-grid">Skip to menu</a>
+
+<!-- ===== Wallpaper (margin around the tablet) ===== -->
+<div class="wallpaper" aria-hidden="true">
+  <span class="wall-glow"></span>
+  <span class="wall-text is-left">ONT&nbsp;&nbsp;TABLE&nbsp;&nbsp;ORDER&nbsp;&nbsp;<span class="accent">KIOSK</span></span>
+  <span class="wall-text is-right">ONT&nbsp;&nbsp;TABLE&nbsp;&nbsp;ORDER&nbsp;&nbsp;KIOSK</span>
+  <span class="wall-mark">1920 × 1080 · Table Ordering System</span>
+</div>
+
+<!-- ===== Tablet device ===== -->
+<div class="device-wrap">
+<div class="device">
+<div class="screen" id="screen">
+
+  <p id="live-region" class="sr-only" role="status" aria-live="polite"></p>
+
+  <!-- ==========================================================
+       VIEW : ATTRACT
+       ========================================================== -->
+  <section id="view-attract" class="view is-active" data-announce="ONT Table Order Kiosk" aria-label="Start screen">
+    <div class="attract-photos" aria-hidden="true">
+      <img src="assets/images/menu_sample.jpg" alt="">
+      <img src="assets/images/food_image.jpg" alt="">
+    </div>
+    <div class="attract-scrim" aria-hidden="true"></div>
+
+    <div class="attract-lang">
+      <div class="lang-switch" role="group" aria-label="Language / 언어">
+        <button type="button" data-lang="ko" aria-pressed="true">한국어</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+
+    <div class="attract-inner">
+      <span class="attract-badge"><span data-i18n="table">테이블</span> 12 · <span data-i18n="open">입장</span></span>
+      <h1 class="attract-logo">ONT</h1>
+      <p class="attract-sub">Table Order</p>
+      <span class="attract-rule" aria-hidden="true"></span>
+      <p class="attract-desc" data-i18n="touchToOrder">화면을 터치하면 시작합니다</p>
+      <button type="button" class="attract-cta press" data-autofocus>
+        <span aria-hidden="true">👆</span>
+        <span data-i18n="start">주문 시작하기</span>
+      </button>
+    </div>
+
+    <div class="attract-meta">
+      <span>Open <b>11:00 – 23:00</b></span>
+      <span>Wi-Fi <b>ONT_GUEST</b></span>
+      <span><b class="js-clock">00:00</b></span>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       VIEW : MENU
+       ========================================================== -->
+  <section id="view-menu" class="view" data-announce="Menu" aria-label="Menu">
+
+    <header class="kiosk-header">
+      <button type="button" id="btn-allmenu" class="hdr-btn press" aria-expanded="false" aria-controls="allmenu-sheet">
+        <img class="ico" src="assets/images/start_button.png" alt="">
+        <span data-i18n="allMenu">전체 메뉴</span>
+      </button>
+      <button type="button" id="btn-bell" class="hdr-btn is-bell press">
+        <img class="ico" src="assets/images/bell.svg" alt="">
+        <span data-i18n="call">직원 호출</span>
+      </button>
+
+      <div class="hdr-brand">ONT <small>Table Order</small></div>
+
+      <div class="hdr-right">
+        <button type="button" id="btn-cart-top" class="hdr-btn press" style="border:0">
+          <span aria-hidden="true">🧾</span>
+          <span data-i18n="cart">장바구니</span>
+          <span class="badge" id="cart-badge" style="min-width:34px;height:34px;padding:0 8px;border-radius:99px;background:#f07000;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:18px">0</span>
+        </button>
+        <span class="table-badge"><span class="js-table-no">테이블 12</span></span>
+        <span class="hdr-clock js-clock">00:00</span>
+        <div class="lang-switch" role="group" aria-label="Language / 언어">
+          <button type="button" data-lang="ko" aria-pressed="true">한국어</button>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <button type="button" id="btn-home" class="hdr-btn press" style="border:0" data-i18n-aria="home">
+          <span aria-hidden="true">⏻</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- all-menu sheet -->
+    <div id="allmenu-sheet" class="allmenu-sheet" aria-hidden="true">
+      <h3 data-i18n="jumpCat">카테고리 바로가기</h3>
+      <div id="allmenu-grid" class="allmenu-grid"></div>
+    </div>
+
+    <div class="kiosk-body">
+
+      <!-- categories -->
+      <nav class="sidebar" aria-label="Categories">
+        <div id="cate-wrapper" class="cate-wrapper" role="tablist" aria-orientation="vertical"></div>
+        <div class="order-actions">
+          <button type="button" id="btn-orderlist" class="btn btn-primary press" data-i18n="orderList">주문 내역</button>
+          <button type="button" id="btn-bill" class="btn btn-secondary press" data-i18n="viewBill">결제 금액</button>
+        </div>
+      </nav>
+
+      <!-- menu grid -->
+      <main class="main">
+        <div class="main-head">
+          <div>
+            <h2 id="cat-title">시그니처</h2>
+            <p id="cat-sub">Chef picks</p>
+          </div>
+          <span class="count" id="cat-count"></span>
+        </div>
+        <div class="menu-scroll" id="menu-scroll">
+          <div class="menu-grid" id="menu-grid" role="tabpanel" aria-label="Menu items"></div>
+        </div>
+      </main>
+
+      <!-- cart trigger -->
+      <button type="button" id="cart-trigger" class="cart-trigger press">
+        <span class="ct-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="44" height="44">
+            <path d="M3 3h2l2.4 12.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 7H6"/>
+            <circle cx="10" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/>
+          </svg>
+        </span>
+        <span class="ct-count" id="ct-count">0</span>
+        <span class="ct-label" data-i18n="cart">장바구니</span>
+        <span class="ct-total" id="ct-total">$0.00</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       VIEW : PAYMENT
+       ========================================================== -->
+  <section id="view-pay" class="view" data-announce="Payment in progress" aria-label="Payment">
+    <div class="pay-inner">
+      <div style="position:relative;height:260px;width:100%;display:flex;align-items:center;justify-content:center">
+        <span class="pay-wave" aria-hidden="true"></span>
+        <span class="pay-wave d2" aria-hidden="true"></span>
+        <span class="pay-wave d3" aria-hidden="true"></span>
+        <span class="pay-card" aria-hidden="true"></span>
+      </div>
+      <h2 class="pay-title" data-i18n="payTitle">카드를 대주세요</h2>
+      <p class="pay-desc" data-i18n="payDesc">카드 또는 휴대폰을 리더기에 올려주세요.</p>
+      <p class="pay-amount" id="pay-amount">$0.00</p>
+      <div class="pay-progress" role="progressbar" aria-label="Payment progress"><i id="pay-bar"></i></div>
+      <div class="pay-steps">
+        <span class="s on" data-i18n="payStep1">카드 인식 중</span>
+        <span class="s" data-i18n="payStep2">승인 요청 중</span>
+        <span class="s" data-i18n="payStep3">승인 완료</span>
+      </div>
+      <button type="button" id="btn-pay-cancel" class="pay-cancel press" data-i18n="payCancel">결제 취소</button>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       VIEW : DONE
+       ========================================================== -->
+  <section id="view-done" class="view" data-announce="Payment complete" aria-label="Payment complete">
+    <div class="done-inner">
+      <div class="done-check" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none" stroke="#38b45f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 25l10 10 18-20"/>
+        </svg>
+      </div>
+      <h2 class="done-title" data-i18n="doneTitle">결제가 완료되었습니다</h2>
+      <p class="done-desc" data-i18n="doneDesc">감사합니다. 영수증이 테이블에서 출력됩니다.</p>
+
+      <div class="done-receipt">
+        <div class="r-row"><span class="js-table-no">테이블 12</span><span id="done-count">0</span></div>
+        <div class="r-row"><span data-i18n="orderNo">주문</span><span><span id="done-orders">0</span></span></div>
+        <div class="r-row"><span data-i18n="method">결제 수단</span><span data-i18n="card">신용카드</span></div>
+        <div class="r-row total"><span data-i18n="paidTotal">결제 금액</span><span id="done-total">$0.00</span></div>
+      </div>
+
+      <div class="done-actions">
+        <button type="button" id="btn-done-menu" class="btn btn-ghost press" data-i18n="backToMenu" data-autofocus>메뉴로 돌아가기</button>
+        <button type="button" id="btn-done-new" class="btn btn-primary press" data-i18n="newOrder">새로 주문하기</button>
+      </div>
+      <p class="done-countdown"><span data-i18n="returning">초기 화면으로 돌아갑니다</span> · <b id="done-left">20</b><span data-i18n="sec">초 후</span></p>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       CART PANEL
+       ========================================================== -->
+  <aside id="cart-panel" class="cart-panel" aria-hidden="true" aria-label="Cart">
+    <div class="panel-header">
+      <div class="ph-table" tabindex="-1"><span class="js-table-no">테이블 12</span></div>
+      <p class="ph-sub" data-i18n="cartEmptySub">메뉴를 선택해 주문을 시작하세요.</p>
+    </div>
+    <div class="panel-body" id="cart-body"></div>
+    <div class="panel-summary">
+      <div class="sum-row"><span data-i18n="subtotal">주문 금액</span><span id="sum-sub">$0.00</span></div>
+      <div class="sum-row"><span data-i18n="tax">부가세 (10%)</span><span id="sum-tax">$0.00</span></div>
+      <div class="sum-row total"><span data-i18n="total">합계</span><span class="v" id="sum-total">$0.00</span></div>
+    </div>
+    <div class="panel-footer">
+      <button type="button" id="btn-cart-close" class="btn-close press" data-i18n="close">닫기</button>
+      <button type="button" id="btn-order" class="btn-pay press is-disabled">
+        <span class="lbl"><img src="assets/images/card.svg" alt=""><span data-i18n="order">주문하기</span></span>
+        <span id="btn-order-total">$0.00</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ==========================================================
+       MODALS
+       ========================================================== -->
+  <div class="backdrop" id="backdrop"></div>
+
+  <!-- detail -->
+  <div class="modal" id="modal-detail" role="dialog" aria-modal="true" aria-labelledby="detail-title" aria-hidden="true">
+    <div class="modal-box" id="detail-box"></div>
+  </div>
+
+  <!-- confirm -->
+  <div class="modal list-modal" id="modal-confirm" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-hidden="true">
+    <div class="modal-box">
+      <button type="button" class="modal-close press" data-close-modal data-i18n-aria="close" aria-label="닫기"><img src="assets/images/pop_close.png" alt=""></button>
+      <header class="popup-header">
+        <h2 class="popup-title" id="confirm-title" data-i18n="confirmTitle" tabindex="-1" data-autofocus>수량 확인하셨습니까?</h2>
+        <p class="popup-sub" data-i18n="confirmSub">주방으로 전송하기 전에 수량을 확인해 주세요.</p>
+      </header>
+      <div class="popup-content"><div class="list-content" id="confirm-content"></div></div>
+      <footer class="popup-footer">
+        <div class="total-price"><strong data-i18n="total">합계</strong><strong class="price" id="confirm-total">$0.00</strong></div>
+        <div class="btn-wrap">
+          <button type="button" id="btn-confirm-yes" class="btn btn-primary press" data-i18n="yes">네, 주문할게요</button>
+          <button type="button" id="btn-confirm-no" class="btn btn-secondary press" data-i18n="no">더 담을게요</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- order history -->
+  <div class="modal list-modal" id="modal-orders" role="dialog" aria-modal="true" aria-labelledby="orders-title" aria-hidden="true">
+    <div class="modal-box">
+      <button type="button" class="modal-close press" data-close-modal aria-label="닫기"><img src="assets/images/pop_close.png" alt=""></button>
+      <header class="popup-header">
+        <h2 class="popup-title" id="orders-title" data-i18n="ordersTitle" tabindex="-1" data-autofocus>주문 내역</h2>
+        <p class="popup-sub" data-i18n="ordersSub">이 테이블에서 주방으로 전송된 전체 내역입니다.</p>
+      </header>
+      <div class="popup-content" id="orders-content"></div>
+      <footer class="popup-footer">
+        <div class="total-price"><strong data-i18n="total">합계</strong><strong class="price" id="orders-total">$0.00</strong></div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- bill -->
+  <div class="modal list-modal" id="modal-bill" role="dialog" aria-modal="true" aria-labelledby="bill-title" aria-hidden="true">
+    <div class="modal-box">
+      <button type="button" class="modal-close press" data-close-modal aria-label="닫기"><img src="assets/images/pop_close.png" alt=""></button>
+      <header class="popup-header">
+        <h2 class="popup-title" id="bill-title" data-i18n="billTitle" tabindex="-1" data-autofocus>결제 금액</h2>
+        <p class="popup-sub" data-i18n="billSub">이 테이블의 전체 주문 합계입니다.</p>
+      </header>
+      <div class="popup-content" id="bill-content"></div>
+      <footer class="popup-footer">
+        <div class="total-price"><strong data-i18n="total">합계</strong><strong class="price" id="bill-total">$0.00</strong></div>
+        <div class="btn-wrap single">
+          <button type="button" id="btn-pay-now" class="btn btn-primary press" data-i18n="payNow">지금 결제</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- message -->
+  <div class="modal msg-modal" id="modal-msg" role="dialog" aria-modal="true" aria-labelledby="msg-title" aria-hidden="true">
+    <div class="modal-box">
+      <div class="msg-card">
+        <p class="m-title" id="msg-title" tabindex="-1" data-autofocus>메시지</p>
+        <p class="m-desc" id="msg-desc"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-wrap" id="toast-wrap" aria-live="polite"></div>
+  <div class="screen-glare" aria-hidden="true"></div>
+
+</div><!-- /.screen -->
+</div><!-- /.device -->
+</div><!-- /.device-wrap -->
+
+<script src="assets/js/menu-data.js"></script>
+<script src="assets/js/kiosk.js"></script>
+</body>
+</html>
