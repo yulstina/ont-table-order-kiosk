@@ -86,9 +86,9 @@ body{
 @keyframes breathe{0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(1)}50%{opacity:.9;transform:translate(-50%,-50%) scale(1.08)}}
 
 /* ---------- Device (tablet) ---------- */
-.device-wrap{position:fixed;inset:0;display:grid;place-items:center;z-index:1}
+.device-wrap{position:fixed;inset:0;z-index:1}
 .device{
-  position:relative;
+  position:absolute;left:50%;top:50%;
   width:calc(var(--stage-w) + 96px);
   height:calc(var(--stage-h) + 96px);
   padding:48px;
@@ -99,7 +99,9 @@ body{
     0 60px 140px rgba(0,0,0,.62),
     0 0 0 1px rgba(0,0,0,.6);
   transform-origin:center center;
-  transform:scale(var(--device-scale,1));
+  /* translate first so the device stays centred even when the un-scaled
+     box is larger than the viewport (layout centring would clamp to start) */
+  transform:translate(-50%,-50%) scale(var(--device-scale,1));
   will-change:transform;
 }
 .device::before{ /* camera */
