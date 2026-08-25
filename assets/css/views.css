@@ -325,7 +325,7 @@
 .detail-header .base-price{margin-top:20px;font-size:38px;font-weight:600;color:var(--orange);font-variant-numeric:tabular-nums}
 .detail-divider{height:1px;background:var(--gray-150);margin:28px 0 32px}
 
-.opt-panel{margin-bottom:36px}
+.opt-panel{border:0;padding:0;margin:0 0 36px}
 .opt-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px}
 .opt-head h3{font-size:29px;font-weight:700;color:#222}
 .opt-head .hint{font-size:17px;font-weight:400;color:var(--gray-500);margin-top:4px}

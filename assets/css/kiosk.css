@@ -48,6 +48,7 @@
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+fieldset{border:0;min-width:0}   /* the UA groove border has no place here */
 html,body{height:100%;width:100%;overflow:hidden}
 body{
   background:#0b0a09;
