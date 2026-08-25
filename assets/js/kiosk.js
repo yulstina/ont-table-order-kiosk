@@ -42,7 +42,10 @@
       selectRequired: 'Please choose the required options.',
       kcal: 'kcal', orderNo: 'Order', preparing: 'Preparing', served: 'Served',
       paidTotal: 'Paid total', method: 'Payment method', card: 'Credit card',
-      guests: 'Guests', open: 'Open', jumpCat: 'Jump to a category'
+      guests: 'Guests', open: 'Open', jumpCat: 'Jump to a category',
+      payMethod: 'How would you like to pay?', payByCard: 'Pay in card',
+      payByStaff: 'Call the staff and pay', staffCalled: 'A staff member is coming to take your payment.',
+      goMain: 'Go to main', remove: 'Remove', edit: 'Edit'
     },
     ko: {
       allMenu: '전체 메뉴', call: '직원 호출', table: '테이블',
@@ -75,7 +78,10 @@
       selectRequired: '필수 옵션을 선택해 주세요.',
       kcal: 'kcal', orderNo: '주문', preparing: '조리 중', served: '서빙 완료',
       paidTotal: '결제 금액', method: '결제 수단', card: '신용카드',
-      guests: '인원', open: '입장', jumpCat: '카테고리 바로가기'
+      guests: '인원', open: '입장', jumpCat: '카테고리 바로가기',
+      payMethod: '어떻게 결제하시겠어요?', payByCard: '카드로 결제',
+      payByStaff: '직원 호출 결제', staffCalled: '직원이 결제를 도와드리러 갑니다.',
+      goMain: '처음으로', remove: '삭제', edit: '수정'
     }
   };
 
@@ -422,7 +428,8 @@
     var qtyHtml = q ? '<span class="qty-chip" aria-hidden="true">' + q + '</span>' : '';
 
     b.innerHTML =
-      '<span class="thumb">' + tagHtml + qtyHtml + '<img src="' + it.img + '" alt="" loading="lazy"></span>' +
+      '<span class="thumb">' + tagHtml + qtyHtml +
+      '<img src="' + it.img + '" alt="" loading="lazy" data-fallback="assets/images/default.png"></span>' +
       '<span class="info">' +
       '<h3>' + esc(nameOf(it)) + '</h3>' +
       '<span class="kr">' + esc(subNameOf(it)) + '</span>' +
@@ -505,7 +512,7 @@
       '<button type="button" class="modal-close press" data-close aria-label="' + t('close') + '"><img src="assets/images/pop_close.png" alt=""></button>' +
       '<div class="detail-wrapper">' +
       '  <div class="detail-left">' +
-      '    <div class="detail-photo"><span class="tag-row">' + tags + '</span><img src="' + item.img + '" alt="' + esc(nameOf(item)) + '"></div>' +
+      '    <div class="detail-photo"><span class="tag-row">' + tags + '</span><img src="' + item.img + '" alt="' + esc(nameOf(item)) + '" data-fallback="assets/images/detail_default.png"></div>' +
       '    <div class="detail-badges">' +
       '      <span class="badge-chip">' + item.kcal + ' ' + t('kcal') + '</span>' +
       '      <span class="badge-chip">' + esc(nameOf(catById(item.cat))) + '</span>' +
@@ -685,7 +692,9 @@
     var body = $('#cart-body');
     body.innerHTML = '';
     if (!state.cart.length) {
-      body.innerHTML = '<div class="cart-empty"><div class="ce-ico" aria-hidden="true">🍽</div><p><b>' + t('cartEmpty') + '</b><br>' + t('cartEmptySub') + '</p></div>';
+      body.innerHTML = '<div class="cart-empty">' +
+        '<img class="ce-ico" src="assets/images/cart-null.png" alt="">' +
+        '<p><b>' + t('cartEmpty') + '</b><br>' + t('cartEmptySub') + '</p></div>';
     } else {
       state.cart.forEach(function (line, i) {
         body.appendChild(cartRow(line, i));
@@ -716,8 +725,9 @@
       '      <span>' + line.qty + '</span>' +
       '      <button type="button" class="press" data-act="inc" aria-label="+1">+</button>' +
       '    </div>' +
-      '    <button type="button" class="link press" data-act="edit">EDIT</button>' +
-      '    <button type="button" class="link press" data-act="remove">REMOVE</button>' +
+      '    <button type="button" class="link press" data-act="edit">' + t('edit') + '</button>' +
+      '    <button type="button" class="link is-del press" data-act="remove">' +
+      '      <img src="assets/images/icon_del.svg" alt=""><span>' + t('remove') + '</span></button>' +
       '  </div>' +
       '</div>' +
       '<div class="item-price">' + money(lineTotal(line)) + '</div>';
@@ -784,12 +794,14 @@
     closeCart();
     renderCart();
     renderMenu();
-    showMsg(t('orderedTitle'), t('orderedDesc'));
+    showMsg(t('orderedTitle'), t('orderedDesc'), 'assets/images/cart-ani-icon.png');
     announce(t('orderedTitle'));
     setTimeout(function () { order.state = 'served'; }, 30000);
   }
 
-  function showMsg(title, desc) {
+  function showMsg(title, desc, icon) {
+    var ico = $('#msg-ico');
+    if (icon) { ico.src = icon; ico.hidden = false; } else { ico.hidden = true; }
     $('#msg-title').textContent = title;
     $('#msg-desc').textContent = desc || '';
     openModal('modal-msg');
@@ -986,7 +998,7 @@
     /* header */
     $('#btn-allmenu').addEventListener('click', function () { toggleAllMenu(); });
     $('#btn-bell').addEventListener('click', function () {
-      showMsg(t('call'), t('called'));
+      showMsg(t('call'), t('called'), 'assets/images/pay_call.png');
       announce(t('called'));
     });
     $('#btn-home').addEventListener('click', function () { showView('attract'); });
@@ -1014,7 +1026,19 @@
     $('#btn-confirm-no').addEventListener('click', function () { closeModal($('#modal-confirm')); });
 
     /* bill + payment */
-    $('#btn-pay-now').addEventListener('click', startPayment);
+    $('#btn-pay-now').addEventListener('click', function () {
+      if (ordersSubtotal() <= 0) return;
+      openModal('modal-paymethod');
+    });
+    $('#btn-pay-card').addEventListener('click', function () {
+      closeModal($('#modal-paymethod'));
+      startPayment();
+    });
+    $('#btn-pay-staff').addEventListener('click', function () {
+      closeAllModals();
+      showMsg(t('payByStaff'), t('staffCalled'), 'assets/images/pay_call.png');
+      announce(t('staffCalled'));
+    });
     $('#btn-pay-cancel').addEventListener('click', cancelPayment);
     $('#btn-done-menu').addEventListener('click', function () { clearInterval(doneTimer); showView('menu'); });
     $('#btn-done-new').addEventListener('click', resetSession);
@@ -1045,6 +1069,17 @@
     });
     scroller.addEventListener('click', function (e) {
       if (moved > 10) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+
+    /* swap in the placeholder art whenever a dish photo fails to load */
+    document.addEventListener('error', function (e) {
+      var img = e.target;
+      if (!img || img.tagName !== 'IMG') return;
+      var fb = img.getAttribute('data-fallback');
+      if (!fb || img.dataset.fellBack) return;
+      img.dataset.fellBack = '1';
+      img.classList.add('is-fallback');
+      img.src = fb;
     }, true);
 
     /* the stage must never scroll itself (off-canvas panels) */

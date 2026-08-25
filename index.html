@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#171412">
 <meta name="description" content="ONT Table Order Kiosk — a fully interactive 1920×1080 restaurant table-ordering kiosk demo.">
 <title>ONT Table Order Kiosk</title>
-<link rel="icon" href="assets/images/bell.svg">
+<link rel="icon" href="assets/images/main_logo.png">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,7 +47,7 @@
 
     <div class="attract-inner">
       <span class="attract-badge"><span data-i18n="table">테이블</span> 12 · <span data-i18n="open">입장</span></span>
-      <h1 class="attract-logo">ONT</h1>
+      <h1 class="attract-logo"><img src="assets/images/main_logo.png" alt="OnT"></h1>
       <p class="attract-sub">Table Order</p>
       <span class="attract-rule" aria-hidden="true"></span>
       <p class="attract-desc" data-i18n="touchToOrder">화면을 터치하면 시작합니다</p>
@@ -81,7 +81,10 @@
         <span data-i18n="call">직원 호출</span>
       </button>
 
-      <div class="hdr-brand">ONT <small>Table Order</small></div>
+      <div class="hdr-brand">
+        <img src="assets/images/main_logo.png" alt="OnT">
+        <small>Table Order</small>
+      </div>
 
       <div class="hdr-right">
         <button type="button" id="btn-cart-top" class="hdr-btn is-plain press">
@@ -122,8 +125,14 @@
       <nav class="sidebar" aria-label="Categories">
         <div id="cate-wrapper" class="cate-wrapper" role="tablist" aria-orientation="vertical"></div>
         <div class="order-actions">
-          <button type="button" id="btn-orderlist" class="btn btn-primary press" data-i18n="orderList">주문 내역</button>
-          <button type="button" id="btn-bill" class="btn btn-secondary press" data-i18n="viewBill">결제 금액</button>
+          <button type="button" id="btn-orderlist" class="btn btn-primary press">
+            <img class="btn-ico" src="assets/images/list1.svg" alt="">
+            <span data-i18n="orderList">주문 내역</span>
+          </button>
+          <button type="button" id="btn-bill" class="btn btn-secondary press">
+            <img class="btn-ico" src="assets/images/list2.svg" alt="">
+            <span data-i18n="viewBill">결제 금액</span>
+          </button>
         </div>
       </nav>
 
@@ -185,11 +194,8 @@
        ========================================================== -->
   <section id="view-done" class="view" data-announce="Payment complete" aria-label="Payment complete">
     <div class="done-inner">
-      <div class="done-check" aria-hidden="true">
-        <svg viewBox="0 0 48 48" fill="none" stroke="#38b45f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M10 25l10 10 18-20"/>
-        </svg>
-      </div>
+      <img class="done-photo" src="assets/images/cardfinish.jpg" alt="">
+      <img class="done-logo" src="assets/images/main_logo.png" alt="OnT">
       <h2 class="done-title" data-i18n="doneTitle">결제가 완료되었습니다</h2>
       <p class="done-desc" data-i18n="doneDesc">감사합니다. 영수증이 테이블에서 출력됩니다.</p>
 
@@ -201,8 +207,8 @@
       </div>
 
       <div class="done-actions">
-        <button type="button" id="btn-done-menu" class="btn btn-ghost press" data-i18n="backToMenu" data-autofocus>메뉴로 돌아가기</button>
-        <button type="button" id="btn-done-new" class="btn btn-primary press" data-i18n="newOrder">새로 주문하기</button>
+        <button type="button" id="btn-done-menu" class="btn btn-ghost press" data-i18n="backToMenu">메뉴로 돌아가기</button>
+        <button type="button" id="btn-done-new" class="btn btn-primary press" data-i18n="goMain" data-autofocus>처음으로</button>
       </div>
       <p class="done-countdown"><span data-i18n="returning">초기 화면으로 돌아갑니다</span> · <b id="done-left">20</b><span data-i18n="sec">초 후</span></p>
     </div>
@@ -293,10 +299,30 @@
     </div>
   </div>
 
+  <!-- payment method choice -->
+  <div class="modal choice-modal" id="modal-paymethod" role="dialog" aria-modal="true" aria-labelledby="paymethod-title" aria-hidden="true">
+    <div class="modal-box">
+      <button type="button" class="modal-close press" data-close-modal aria-label="닫기"><img src="assets/images/pop_close.png" alt=""></button>
+      <h2 class="sr-only" id="paymethod-title" data-i18n="payMethod">결제 방법 선택</h2>
+      <div class="choice-grid">
+        <button type="button" id="btn-pay-card" class="choice press" data-autofocus>
+          <span class="choice-art"><img src="assets/images/pay_card.png" alt=""></span>
+          <span class="choice-label" data-i18n="payByCard">카드로 결제</span>
+        </button>
+        <button type="button" id="btn-pay-staff" class="choice press">
+          <span class="choice-art"><img src="assets/images/pay_call.png" alt=""></span>
+          <span class="choice-label" data-i18n="payByStaff">직원 호출 결제</span>
+        </button>
+      </div>
+      <button type="button" class="choice-cancel press" data-close-modal data-i18n="cancel">취소</button>
+    </div>
+  </div>
+
   <!-- message -->
   <div class="modal msg-modal" id="modal-msg" role="dialog" aria-modal="true" aria-labelledby="msg-title" aria-hidden="true">
     <div class="modal-box">
       <div class="msg-card">
+        <img class="m-ico" id="msg-ico" src="assets/images/cart-ani-icon.png" alt="" hidden>
         <p class="m-title" id="msg-title" tabindex="-1" data-autofocus>메시지</p>
         <p class="m-desc" id="msg-desc"></p>
       </div>
