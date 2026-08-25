@@ -10,19 +10,17 @@
   background:#0b0806;color:#fff;
   align-items:flex-start;justify-content:center;text-align:left;cursor:pointer;
 }
-/* hero photo with a slow, continuous drift */
-.attract-photo{position:absolute;inset:0;overflow:hidden}
+/* hero video, full bleed and looping; the poster covers the first frames */
+.attract-photo{position:absolute;inset:0;overflow:hidden;background:#0b0806}
+.attract-photo video,
 .attract-photo img{
-  position:absolute;top:50%;left:50%;
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1.02);
   width:100%;height:100%;object-fit:cover;object-position:70% 50%;
-  transform-origin:center;
-  animation:heroDrift 34s ease-in-out infinite alternate;
+  pointer-events:none;
 }
-@keyframes heroDrift{
-  0%  {transform:translate(-50%,-50%) scale(1.06) translate3d(0,0,0)}
-  50% {transform:translate(-50%,-50%) scale(1.11) translate3d(-1.4%,-.8%,0)}
-  100%{transform:translate(-50%,-50%) scale(1.16) translate3d(-2.6%,.9%,0)}
-}
+/* the poster only fades away once real frames are on screen */
+.attract-photo video{opacity:0;transition:opacity .9s var(--ease-out)}
+.attract-photo video.is-playing{opacity:1}
 /* darken the left third so the wordmark always sits on clean ground */
 .attract-scrim{
   position:absolute;inset:0;

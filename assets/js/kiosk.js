@@ -192,9 +192,42 @@
     }
     next.classList.add('is-active');
     state.view = name;
+    syncHeroVideo(name);
     var focusTarget = next.querySelector('[data-autofocus]');
     if (focusTarget) setTimeout(function () { focusTarget.focus(); }, 120);
     announce(next.getAttribute('data-announce') || '');
+  }
+
+  /* ---------------------------------------------------------
+     Attract hero video — loops forever while the screen is shown
+     --------------------------------------------------------- */
+  var heroVideo = null, heroReduced = false;
+  function initHeroVideo() {
+    heroVideo = $('#attract-video');
+    if (!heroVideo) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      heroReduced = true;
+      heroVideo.removeAttribute('autoplay');
+      heroVideo.pause();
+      return;                                   /* the still image stays */
+    }
+    heroVideo.addEventListener('playing', function () { heroVideo.classList.add('is-playing'); });
+    /* some kiosks/browsers still refuse to autoplay: retry on first input */
+    var kick = function () { playHero(); };
+    ['pointerdown', 'keydown', 'touchstart'].forEach(function (e) {
+      document.addEventListener(e, kick, { once: true, passive: true });
+    });
+    playHero();
+  }
+  function playHero() {
+    if (!heroVideo) return;
+    var p = heroVideo.play();
+    if (p && p.catch) p.catch(function () { /* blocked — poster remains */ });
+  }
+  function syncHeroVideo(viewName) {
+    if (!heroVideo || heroReduced) return;
+    if (viewName === 'attract') playHero();
+    else heroVideo.pause();                     /* no decoding behind other views */
   }
 
   function announce(msg) {
@@ -1034,6 +1067,7 @@
 
   function init() {
     fitStage();
+    initHeroVideo();
     renderStatic();
     renderCategories();
     renderMenu();

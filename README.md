@@ -14,6 +14,7 @@
 | 해상도 | **1920 × 1080 고정**. 어떤 기기·창 크기에서도 비율이 유지되도록 `transform: scale()`로 축소/확대 |
 | 프레젠테이션 | 태블릿 베젤 목업 안에서 화면이 돌아가고, 남는 여백에는 세로 방향 `ONT TABLE ORDER KIOSK` 워터마크 |
 | 화면 | 대기(Attract) → 메뉴 → 메뉴 상세 → 장바구니 → 주문 확인 → 결제 → 완료 |
+| 대기 화면 | 10초 배경 영상(open_bg.mp4) 무한 루프, 음소거 자동재생. 로딩 중에는 open_bg.png 스틸이 보이고 다른 화면에서는 자동 일시정지 |
 | 모션 | 화면 크로스페이드, 카드 스태거 등장, 패널 슬라이드, 결제 파형, 체크 드로잉 (`prefers-reduced-motion` 존중) |
 | 접근성 | 키보드 전체 조작, 모달 포커스 트랩, `role="tablist"` 방향키 이동, `aria-live` 안내, 4px 이상 대비 포커스 링, 큰 터치 타깃 |
 | 다국어 | 한국어 / English 실시간 전환 |
@@ -37,7 +38,7 @@ assets/css/kiosk.css    토큰·디바이스 목업·배경·공통 컴포넌트
 assets/css/views.css    화면별 스타일 (대기/메뉴/상세/장바구니/결제/완료)
 assets/js/menu-data.js  메뉴 마스터 데이터 (POS API 응답으로 교체 가능)
 assets/js/kiosk.js      앱 런타임 (상태, 라우팅, 렌더링, 접근성)
-assets/images|fonts     원본 프로젝트에서 이어받은 에셋
+assets/images|fonts     에셋 (open_bg.mp4 = 대기 화면 배경 영상)
 tools/dev-server.js     로컬 미리보기용 정적 서버
 legacy-index.html       인수받은 원본 정적 시안 (참고용 보존)
 menu_detail.html        원본 상세 페이지 시안 (참고용 보존)
