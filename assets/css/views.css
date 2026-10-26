@@ -276,9 +276,11 @@
    5. BACKDROP / MODALS
    ========================================================= */
 .backdrop{
-  position:absolute;inset:0;background:rgba(16,13,11,.62);z-index:50;
+  position:absolute;inset:0;background:rgba(16,13,11,.66);z-index:50;
   opacity:0;visibility:hidden;transition:opacity .32s var(--ease),visibility .32s;
-  backdrop-filter:blur(2px);
+  /* A backdrop filter inside the scaled device creates duplicated/flipped
+     compositor textures in Chromium. The opaque tint keeps the same focus
+     treatment without triggering that GPU rendering path. */
 }
 .backdrop.is-open{opacity:1;visibility:visible}
 
@@ -430,12 +432,13 @@
 
 .msg-modal .modal-box{padding:0;background:transparent;box-shadow:none}
 .msg-card{
-  background:#fff;border:4px solid var(--orange);border-radius:20px;
-  padding:60px 90px;text-align:center;box-shadow:var(--shadow-3);
+  width:1120px;max-width:calc(100vw - 160px);
+  background:#fff;border:6px solid var(--orange);border-radius:32px;
+  padding:96px 140px;text-align:center;box-shadow:var(--shadow-3);
 }
-.msg-card .m-ico{width:110px;height:110px;margin:0 auto 24px}
-.msg-card .m-title{font-size:46px;font-weight:700;color:var(--orange)}
-.msg-card .m-desc{font-size:24px;color:var(--gray-700);margin-top:14px;line-height:1.55}
+.msg-card .m-ico{width:200px;height:200px;margin:0 auto 36px;object-fit:contain}
+.msg-card .m-title{font-size:72px;font-weight:700;color:var(--orange);line-height:1.2}
+.msg-card .m-desc{font-size:36px;color:var(--gray-700);margin-top:24px;line-height:1.5}
 
 /* =========================================================
    6. PAYMENT VIEW
@@ -551,7 +554,7 @@
 .detail-photo img.is-fallback{object-fit:contain;padding:12%;background:var(--gray-100)}
 
 /* message popup illustration */
-.msg-card .m-ico{width:96px;height:auto;margin:0 auto 20px;display:block}
+.msg-card .m-ico{width:200px;height:200px;margin:0 auto 36px;display:block;object-fit:contain}
 .msg-card .m-ico[hidden]{display:none}
 
 /* =========================================================

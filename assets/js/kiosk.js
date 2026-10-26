@@ -794,7 +794,7 @@
     closeCart();
     renderCart();
     renderMenu();
-    showMsg(t('orderedTitle'), t('orderedDesc'), 'assets/images/cart-ani-icon.png');
+    showMsg(t('orderedTitle'), t('orderedDesc'), 'assets/images/default.png');
     announce(t('orderedTitle'));
     setTimeout(function () { order.state = 'served'; }, 30000);
   }
